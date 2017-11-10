@@ -1,0 +1,3 @@
+/home/sunyake/Alogrithm_Learn/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/sunyake/Alogrithm_Learn/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sunyake/Alogrithm_Learn/cmake-build-debug/CMakeFiles/Alogrithm_Learn.dir

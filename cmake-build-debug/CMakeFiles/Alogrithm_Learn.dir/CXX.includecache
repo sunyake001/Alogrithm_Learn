@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sunyake/Alogrithm_Learn/SortTestHelper.h
+iostream
+-
+cassert
+-
+
+/home/sunyake/Alogrithm_Learn/main.cpp
+iostream
+-
+algorithm
+-
+SortTestHelper.h
+/home/sunyake/Alogrithm_Learn/SortTestHelper.h
+
