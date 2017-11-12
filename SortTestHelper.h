@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <memory>
 using namespace std;
 
 namespace SortTestHelper{
@@ -67,7 +68,7 @@ namespace SortTestHelper{
         cout<<sortName<<" "<<double(endTime-startTime)/CLOCKS_PER_SEC<<" s"<<endl;
     }
 
-    int* copyIntArray(int a[],int n)
+    int *copyIntArray(int a[],int n)
     {
         int *arr = new int[n];
         copy(a,a+n,arr);
