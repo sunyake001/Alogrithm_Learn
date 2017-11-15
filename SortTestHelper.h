@@ -8,6 +8,8 @@
 #include <iostream>
 #include <cassert>
 #include <memory>
+#include <string>
+#include <ctime>
 using namespace std;
 
 namespace SortTestHelper{
@@ -65,7 +67,7 @@ namespace SortTestHelper{
         clock_t endTime = clock();
 
         assert( isSorted(arr,n));
-        cout<<sortName<<" "<<double(endTime-startTime)/CLOCKS_PER_SEC<<" s"<<endl;
+        cout<<sortName<<" "<< double(endTime-startTime)/CLOCKS_PER_SEC <<" s"<<endl;
     }
 
     int *copyIntArray(int a[],int n)

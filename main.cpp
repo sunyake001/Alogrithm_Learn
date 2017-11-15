@@ -82,25 +82,29 @@ void insert_sort_scope(T arr[],int l,int r)
 }
 
 //希尔排序
-template <typename  T>
-void shell_sort(T A[],int N)
-{
-    int h=1;
-    while(h < N/3)
-        h=3*h+1;
+template<typename T>
+void shellSort(T arr[], int n) {
 
-    while(h>=1)
-    {
-        for(int i=h;i<N;++i)
-        {
-            for(int j=i;j > 0 && A[j] < A[j-h];j-=h)
-            {
-                swap(A[j],A[j-h]);
-            }
-        }
+	// 计算 increment sequence: 1, 4, 13, 40, 121, 364, 1093...
+	int h = 1;
+	while (h < n / 3)
+		h = 3 * h + 1;
 
-        h = h/3;
-    }
+	while (h >= 1) {
+
+		// h-sort the array
+		for (int i = h; i < n; i++) {
+
+			// 对 arr[i], arr[i-h], arr[i-2*h], arr[i-3*h]... 使用插入排序
+			T e = arr[i];
+			int j;
+			for (j = i; j >= h && e < arr[j - h]; j -= h)
+				arr[j] = arr[j - h];
+			arr[j] = e;
+		}
+
+		h /= 3;
+	}
 }
 
 
@@ -111,20 +115,20 @@ void __merge(T arr[],int l,int mid,int r);
 template <typename T>
 void __mergeSort(T arr[],int l,int r)
 {
-    if( l>=r )
+    //if( l>=r )
+    //    return;
+    if(r - l <= 15)
+    {
+        insert_sort_scope(arr, l, r);
         return;
-//    if(r - l <= 15)
-//    {
-//        insert_sort_scope(arr, l, r);
-//        return;
-//    }
+    }
 
     int mid = (l+r)/2;
     __mergeSort(arr,l,mid);
     __mergeSort(arr,mid+1,r);
     //优化对近乎有序数组的排序
-    //if(arr[mid] > arr[mid+1])
-    __merge(arr,l,mid,r);
+    if(arr[mid] > arr[mid+1])
+		__merge(arr,l,mid,r);
 }
 
 //归并排序辅助函数,归并两个已经排好续的数组arr[l...mid]和arr[mid+1,r]
@@ -162,31 +166,87 @@ void __merge(T arr[],int l,int mid,int r)
     }
     delete []aux;
 }
-//归并排序
+//自顶向下归并排序
 template <typename T>
-void mergeSort(T arr[],int n)
+void mergeSortUB(T arr[],int n)
 {
     __mergeSort(arr,0,n-1);
 }
+//自底向上的归并排序
+template <typename T>
+void mergeSortBU(T arr[], int n)
+{
+	for (int sz = 1; sz < n; sz += sz)
+	{
+		for (int i = 0; i + sz < n; i += sz + sz)
+		{
+			__merge(arr, i, i + sz - 1, min(i + sz + sz - 1,n-1));
+		}
+	}
+}
+
+//快速排序
+template<typename T>
+int __partition(T arr[], int l, int r)
+{
+	T v = arr[l];
+	
+	//arr[l+1...j]<v;arr[j+1...i)>v
+	int j = l;
+	for (int i=l+1;i<=r;i++)
+	{
+		if (arr[i]<v)
+		{
+			swap(arr[j + 1], arr[i]);
+			j++;
+		}
+	}
+	swap(arr[l], arr[j]);
+	return j;
+}
+
+//对arr[l...r]部分进行快速排序
+template<typename T>
+void __quickSort(T arr[], int l, int r)
+{
+	if (l>=r)
+	{
+		return;
+	}
+	int p = __partition(arr, l, r);
+	__quickSort(arr, l, p - 1);
+	__quickSort(arr, p + 1, r);
+}
+
+template<typename T>
+void QuickSortSimple(T arr[], int n)
+{
+	__quickSort(arr, 0, n - 1);
+}
+
+
 
 
 int main() {
 
-    int n = 12;
-    int *arr1 = SortTestHelper::genetateRandomArray(n,0,n);
-    //int *arr1 = SortTestHelper::generateNearlyOrderArray(n,50);
+    int n = 1000;
+    //int *arr1 = SortTestHelper::genetateRandomArray(n,0,n);
+    int *arr1 = SortTestHelper::generateNearlyOrderArray(n,5);
     int *arr2 = SortTestHelper::copyIntArray(arr1,n);
     int *arr3 = SortTestHelper::copyIntArray(arr1,n);
     int *arr4 = SortTestHelper::copyIntArray(arr1,n);
     int *arr5 = SortTestHelper::copyIntArray(arr1,n);
     int *arr6 = SortTestHelper::copyIntArray(arr1,n);
-
-    SortTestHelper::testSort("bubble sort",bubble_sort,arr4,n);
-    SortTestHelper::testSort("select sort",select_sort,arr1,n);
-    SortTestHelper::testSort("insert sort",insert_sort,arr2,n);
-    SortTestHelper::testSort("insert sort prom",insert_sort_prom,arr3,n);
-    SortTestHelper::testSort("shell sort",shell_sort,arr5,n);
-    //SortTestHelper::testSort("merge sort",mergeSort,arr6,n);
+	int *arr7 = SortTestHelper::copyIntArray(arr1, n);
+	int *arr8 = SortTestHelper::copyIntArray(arr1, n);
+    //SortTestHelper::testSort("bubble sort",bubble_sort,arr4,n);
+    //SortTestHelper::testSort("select sort",select_sort,arr1,n);
+    //SortTestHelper::testSort("insert sort",insert_sort,arr2,n);
+    //SortTestHelper::testSort("insert sort prom",insert_sort_prom,arr3,n);
+    SortTestHelper::testSort("shell sort", shellSort,arr5,n);
+    SortTestHelper::testSort("merge sort UB", mergeSortUB,arr6,n);
+	SortTestHelper::testSort("merge sort BU", mergeSortBU,arr7, n);
+	SortTestHelper::testSort("quick sort simple", QuickSortSimple, arr8, n);
 
     delete []arr1;
     delete []arr2;
@@ -194,5 +254,8 @@ int main() {
     delete []arr4;
     delete []arr5;
     delete []arr6;
+	delete []arr7;
+	delete []arr8;
+	system("pause");
     return 0;
 }
